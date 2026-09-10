@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Life Coeur — Web Test</title>
+<style>
+:root{--bg:#f3f7f7;--ink:#173438;--muted:#71868a;--green:#1f6f6a;--green2:#e3f0ef;--line:#d8e4e5;--card:#fff;--danger:#a93e3e}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+button,input,select,textarea{font:inherit}.hidden{display:none!important}
+.login{min-height:100vh;display:grid;place-items:center;padding:24px}.login-card{width:min(430px,100%);background:white;border:1px solid var(--line);border-radius:22px;padding:28px;box-shadow:0 15px 50px #14373a12}
+.logo{width:48px;height:48px;border-radius:14px;background:var(--green);color:white;display:grid;place-items:center;font-weight:900}.login h1{margin:14px 0 0}.muted{color:var(--muted);font-size:13px}.field{display:grid;gap:6px;margin:14px 0}.field input,.field textarea,.field select{padding:12px;border:1px solid var(--line);border-radius:11px;background:white}
+.btn{border:0;border-radius:11px;padding:10px 14px;background:var(--green);color:white;font-weight:700;cursor:pointer}.btn.secondary{background:var(--green2);color:var(--green)}.btn.danger{background:#fbe9e9;color:var(--danger)}.btn:disabled{opacity:.45;cursor:not-allowed}
+.shell{display:grid;grid-template-columns:245px 1fr;min-height:100vh}.side{background:#143b3e;color:white;padding:20px 14px;position:sticky;top:0;height:100vh}.brand{display:flex;gap:10px;align-items:center;padding:4px 8px 18px}.brand .logo{width:38px;height:38px}.brand strong{display:block}.brand small{opacity:.7}
+.nav button{width:100%;border:0;background:transparent;color:white;text-align:left;padding:11px 12px;border-radius:10px;margin:2px 0;cursor:pointer}.nav button.active,.nav button:hover{background:#ffffff18}
+.main{padding:24px;min-width:0}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:18px}.top h1{margin:0;font-size:25px}.pill{display:inline-block;padding:6px 9px;border-radius:999px;background:var(--green2);color:var(--green);font-size:11px;font-weight:800}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 5px 18px #17343808}.metric{font-size:28px;font-weight:900;margin-top:4px}
+.two{display:grid;grid-template-columns:1.5fr 1fr;gap:14px}.section{margin-top:15px}.card h2{margin:0 0 12px;font-size:17px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.toolbar input,.toolbar select{padding:10px;border:1px solid var(--line);border-radius:10px;min-width:160px}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--muted);font-weight:650}.actions{display:flex;gap:6px;flex-wrap:wrap}.actions .btn{padding:7px 9px;font-size:12px}
+.notice{padding:10px 12px;border:1px solid var(--line);background:#f9fbfb;border-radius:11px;font-size:12px;color:var(--muted)}.ok{color:var(--green);font-weight:700}.err{color:var(--danger);font-weight:700}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.stack{display:grid;gap:10px}
+.queue-item{border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;justify-content:space-between;gap:12px;align-items:center}.queue-item b{display:block}.small{font-size:12px;color:var(--muted)}
+@media(max-width:900px){.shell{grid-template-columns:1fr}.side{height:auto;position:relative}.grid{grid-template-columns:1fr 1fr}.two,.row{grid-template-columns:1fr}.main{padding:16px}}
+</style>
+</head>
+<body>
+<div id="login" class="login">
+  <div class="login-card">
+    <div class="logo">LC</div>
+    <h1>Life Coeur</h1><div class="pill" style="margin-top:8px">ACESSO DE TESTE</div><p class="muted">Health Intelligence Platform · ambiente demonstrativo</p>
+    <div class="field"><label>E-mail</label><input id="email" value="admin@lifecoeur.local"></div>
+    <div class="field"><label>Senha</label><input id="password" type="password" value="Teste123!"></div>
+    <button class="btn" style="width:100%" onclick="doLogin()">Entrar</button>
+    <p class="muted">Demo local no navegador. Não inserir dados clínicos reais.</p>
+  </div>
+</div>
+
+<div id="app" class="shell hidden">
+  <aside class="side">
+    <div class="brand"><div class="logo">LC</div><div><strong>Life Coeur</strong><small>Web Test</small></div></div>
+    <div class="nav">
+      <button data-page="dashboard" class="active">Dashboard</button>
+      <button data-page="patients">Pacientes</button>
+      <button data-page="clinical">Prontuário</button>
+      <button data-page="agenda">Agenda</button>
+      <button data-page="telemed">Telemedicina</button>
+      <button data-page="second">2ª opinião</button>
+      <button data-page="finance">Financeiro</button>
+      <button data-page="admin">Administração</button>
+      <button onclick="logout()">Sair</button>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="top"><div><h1 id="pageTitle">Dashboard</h1><div class="muted">Dados persistem neste navegador</div></div><span class="pill">DEMO FUNCIONAL</span></div>
+
+    <section id="dashboard"></section>
+
+    <section id="patients" class="hidden">
+      <div class="card"><h2>Cadastro de pacientes</h2>
+        <div class="toolbar"><input id="pName" placeholder="Nome"><input id="pPhone" placeholder="Telefone"><input id="pBirth" type="date"><button class="btn" onclick="addPatient()">Cadastrar</button></div>
+        <div id="patientsTable"></div>
+      </div>
+    </section>
+
+    <section id="clinical" class="hidden">
+      <div class="two">
+        <div class="card"><h2>Novo registro clínico</h2>
+          <div class="field"><label>Paciente</label><select id="cPatient"></select></div>
+          <div class="field"><label>Queixa principal</label><input id="cComplaint" placeholder="Queixa principal"></div>
+          <div class="field"><label>HDA</label><textarea id="cHda" rows="4"></textarea></div>
+          <div class="field"><label>IDA</label><textarea id="cIda" rows="3">Sem outras queixas nos demais aparelhos e sistemas investigados.</textarea></div>
+          <div class="field"><label>Conduta</label><textarea id="cPlan" rows="3"></textarea></div>
+          <button class="btn" onclick="saveClinical()">Registrar no prontuário</button>
+        </div>
+        <div class="card"><h2>Registros</h2><div id="clinicalList" class="stack"></div></div>
+      </div>
+    </section>
+
+    <section id="agenda" class="hidden">
+      <div class="card"><h2>Agenda</h2>
+        <div class="toolbar"><select id="aPatient"></select><input id="aDate" type="datetime-local"><select id="aType"><option>Consulta presencial</option><option>Teleconsulta</option><option>Retorno</option></select><button class="btn" onclick="addAppointment()">Agendar</button></div>
+        <div id="agendaTable"></div>
+      </div>
+    </section>
+
+    <section id="telemed" class="hidden">
+      <div class="two">
+        <div class="card"><h2>Fila de telemedicina</h2><div id="teleQueue" class="stack"></div></div>
+        <div class="card"><h2>Sala demonstrativa</h2><div id="teleRoom" class="notice">Nenhuma chamada iniciada.</div></div>
+      </div>
+    </section>
+
+    <section id="second" class="hidden">
+      <div class="two">
+        <div class="card"><h2>Fila médico → médico</h2>
+          <div class="toolbar"><input id="sSpecialty" placeholder="Especialidade"><input id="sQuestion" placeholder="Pergunta clínica"><select id="sPriority"><option>normal</option><option>alta</option><option>urgente</option></select><button class="btn" onclick="addSecond()">Criar chamado</button></div>
+          <div id="secondQueue" class="stack"></div>
+        </div>
+        <div class="card"><h2>Atendimento de 2ª opinião</h2><div id="secondRoom" class="notice">Assuma um chamado para iniciar.</div></div>
+      </div>
+    </section>
+
+    <section id="finance" class="hidden">
+      <div class="card"><h2>Lançamentos financeiros</h2>
+        <div class="toolbar"><input id="fDesc" placeholder="Descrição"><input id="fValue" type="number" step="0.01" placeholder="Valor"><select id="fType"><option value="receita">Receita</option><option value="despesa">Despesa</option></select><button class="btn" onclick="addFinance()">Lançar</button></div>
+        <div id="financeTable"></div>
+      </div>
+    </section>
+
+    <section id="admin" class="hidden">
+      <div class="two">
+        <div class="card"><h2>Módulos</h2><div id="modules"></div></div>
+        <div class="card"><h2>Ambiente</h2><p class="notice">Esta build é para validação funcional de interface e fluxo. Banco, autenticação forte, assinatura, WebRTC real e integrações externas não estão ativos nesta página isolada.</p><button class="btn danger" onclick="resetDemo()">Restaurar dados demo</button></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+const KEY="life_coeur_webtest_v3";
+function uid(){
+ if(window.crypto && crypto.randomUUID) return uid();
+ return "id-"+Date.now()+"-"+Math.random().toString(16).slice(2);
+}
+function seed(){
+ return {
+  patients:[
+   {id:uid(),name:"Paciente Demo 01",phone:"(11) 99999-1001",birth:"1965-05-12"},
+   {id:uid(),name:"Paciente Demo 02",phone:"(11) 99999-1002",birth:"1972-09-03"}
+  ],
+  clinical:[],
+  appointments:[],
+  second:[
+   {id:uid(),specialty:"Cirurgia Vascular",question:"Avaliação de conduta em caso vascular complexo",priority:"alta",status:"fila",recording:false,opinion:""}
+  ],
+  finance:[{id:uid(),desc:"Consulta particular",value:450,type:"receita",date:new Date().toISOString()}],
+  modules:{PEP:true,Telemedicina:true,"2ª opinião":true,Financeiro:true,CRM:true,Marketing:false}
+ }
+}
+let db=JSON.parse(localStorage.getItem(KEY)||"null")||seed(); save();
+function save(){localStorage.setItem(KEY,JSON.stringify(db))}
+function doLogin(){
+ const emailEl=document.getElementById("email");
+ const passwordEl=document.getElementById("password");
+ const loginEl=document.getElementById("login");
+ const appEl=document.getElementById("app");
+ if(emailEl.value&&passwordEl.value){
+   localStorage.setItem("lc_logged","1");
+   loginEl.classList.add("hidden");
+   appEl.classList.remove("hidden");
+   renderAll();
+ }
+}
+function logout(){localStorage.removeItem("lc_logged");window.location.reload()}
+if(localStorage.getItem("lc_logged")){
+ document.getElementById("login").classList.add("hidden");
+ document.getElementById("app").classList.remove("hidden");
+ setTimeout(renderAll,0);
+}
+const titles={dashboard:"Dashboard",patients:"Pacientes",clinical:"Prontuário",agenda:"Agenda",telemed:"Telemedicina",second:"2ª opinião médico a médico",finance:"Financeiro",admin:"Administração"};
+document.querySelectorAll(".nav button[data-page]").forEach(b=>b.onclick=()=>{
+ document.querySelectorAll(".nav button[data-page]").forEach(x=>x.classList.remove("active"));b.classList.add("active");
+ document.querySelectorAll("main section").forEach(x=>x.classList.add("hidden"));document.getElementById(b.dataset.page).classList.remove("hidden");pageTitle.textContent=titles[b.dataset.page];renderAll();
+});
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function renderAll(){renderDashboard();renderPatients();renderPatientSelects();renderClinical();renderAgenda();renderTelemed();renderSecond();renderFinance();renderModules()}
+function renderDashboard(){
+ const revenue=db.finance.filter(x=>x.type==="receita").reduce((a,b)=>a+Number(b.value),0);
+ dashboard.innerHTML=`<div class="grid">
+ <div class="card"><div class="muted">Pacientes</div><div class="metric">${db.patients.length}</div></div>
+ <div class="card"><div class="muted">Agenda</div><div class="metric">${db.appointments.length}</div></div>
+ <div class="card"><div class="muted">Fila 2ª opinião</div><div class="metric">${db.second.filter(x=>x.status==="fila").length}</div></div>
+ <div class="card"><div class="muted">Receita demo</div><div class="metric">R$ ${revenue.toLocaleString("pt-BR",{minimumFractionDigits:0})}</div></div>
+ </div><div class="two section"><div class="card"><h2>Atividade recente</h2><div class="notice">${db.clinical.length?db.clinical.slice(-3).reverse().map(x=>"Prontuário: "+esc(x.patientName)).join("<br>"):"Cadastre pacientes, registros clínicos e agendamentos para testar o fluxo."}</div></div>
+ <div class="card"><h2>Status</h2><p class="ok">● Aplicação web ativa</p><p class="small">Persistência local: ativa</p><p class="small">Dados reais: proibidos nesta demo</p></div></div>`
+}
+function addPatient(){const n=pName.value.trim();if(!n)return alert("Informe o nome.");db.patients.push({id:uid(),name:n,phone:pPhone.value,birth:pBirth.value});save();pName.value=pPhone.value=pBirth.value="";renderAll()}
+function delPatient(id){if(confirm("Excluir paciente demo?")){db.patients=db.patients.filter(x=>x.id!==id);save();renderAll()}}
+function renderPatients(){patientsTable.innerHTML=`<table><tr><th>Nome</th><th>Telefone</th><th>Nascimento</th><th></th></tr>${db.patients.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.phone)}</td><td>${esc(x.birth)}</td><td><button class="btn danger" onclick="delPatient('${x.id}')">Excluir</button></td></tr>`).join("")}</table>`}
+function renderPatientSelects(){const opt=db.patients.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join("");cPatient.innerHTML=opt;aPatient.innerHTML=opt}
+function saveClinical(){const p=db.patients.find(x=>x.id===cPatient.value);if(!p)return alert("Cadastre um paciente.");db.clinical.push({id:uid(),patientId:p.id,patientName:p.name,complaint:cComplaint.value,hda:cHda.value,ida:cIda.value,plan:cPlan.value,date:new Date().toISOString()});save();cComplaint.value=cHda.value=cPlan.value="";renderAll();alert("Registro demo salvo no prontuário.")}
+function renderClinical(){clinicalList.innerHTML=db.clinical.length?db.clinical.slice().reverse().map(x=>`<div class="queue-item"><div><b>${esc(x.patientName)}</b><div class="small">${new Date(x.date).toLocaleString("pt-BR")}</div><div>${esc(x.complaint||"Sem queixa descrita")}</div></div></div>`).join(""):`<div class="notice">Nenhum registro clínico.</div>`}
+function addAppointment(){if(!aPatient.value||!aDate.value)return alert("Selecione paciente e data.");const p=db.patients.find(x=>x.id===aPatient.value);db.appointments.push({id:uid(),patientId:p.id,patientName:p.name,date:aDate.value,type:aType.value,status:"agendado"});save();renderAll()}
+function renderAgenda(){agendaTable.innerHTML=`<table><tr><th>Paciente</th><th>Data</th><th>Tipo</th><th>Status</th></tr>${db.appointments.map(x=>`<tr><td>${esc(x.patientName)}</td><td>${new Date(x.date).toLocaleString("pt-BR")}</td><td>${esc(x.type)}</td><td><span class="pill">${x.status}</span></td></tr>`).join("")}</table>`}
+function renderTelemed(){const q=db.appointments.filter(x=>x.type==="Teleconsulta"&&x.status!=="concluído");teleQueue.innerHTML=q.length?q.map(x=>`<div class="queue-item"><div><b>${esc(x.patientName)}</b><div class="small">${new Date(x.date).toLocaleString("pt-BR")}</div></div><button class="btn" onclick="startTele('${x.id}')">Chamar</button></div>`).join(""):`<div class="notice">Crie uma Teleconsulta na Agenda para adicioná-la à fila.</div>`}
+function startTele(id){const a=db.appointments.find(x=>x.id===id);teleRoom.innerHTML=`<b>${esc(a.patientName)}</b><p class="small">Aceite paciente: <span class="ok">simulado ✓</span><br>Aceite profissional: <span class="ok">simulado ✓</span></p><button class="btn" onclick="finishTele('${id}')">Concluir consulta</button>`}
+function finishTele(id){const a=db.appointments.find(x=>x.id===id);a.status="concluído";save();teleRoom.textContent="Consulta concluída e status atualizado.";renderAll()}
+function addSecond(){if(!sSpecialty.value.trim()||!sQuestion.value.trim())return alert("Informe especialidade e pergunta clínica.");db.second.push({id:uid(),specialty:sSpecialty.value,question:sQuestion.value,priority:sPriority.value,status:"fila",recording:false,opinion:""});save();sSpecialty.value=sQuestion.value="";renderAll()}
+function renderSecond(){secondQueue.innerHTML=db.second.length?db.second.map(x=>`<div class="queue-item"><div><b>${esc(x.specialty)} · ${esc(x.priority)}</b><div class="small">${esc(x.question)}</div><div class="small">Status: ${esc(x.status)}</div></div><button class="btn" ${x.status!=="fila"?"disabled":""} onclick="claimSecond('${x.id}')">Atender</button></div>`).join(""):`<div class="notice">Fila vazia.</div>`}
+function claimSecond(id){const x=db.second.find(x=>x.id===id);x.status="em atendimento";save();secondRoom.innerHTML=`<b>${esc(x.specialty)}</b><p>${esc(x.question)}</p><div class="notice">Política Life Coeur: gravação obrigatória para concluir este fluxo.</div><div class="field"><label>Parecer</label><textarea id="opinionText" rows="5">${esc(x.opinion)}</textarea></div><div class="actions"><button class="btn secondary" onclick="recordSecond('${id}')">● Simular início/fim da gravação</button><button class="btn" onclick="finishSecond('${id}')">Concluir e registrar</button></div><p id="recStatus" class="small">${x.recording?"Gravação íntegra registrada ✓":"Gravação ainda não registrada"}</p>`;renderSecond()}
+function recordSecond(id){const x=db.second.find(x=>x.id===id);x.recording=true;save();recStatus.innerHTML='<span class="ok">Gravação íntegra registrada ✓</span>'}
+function finishSecond(id){const x=db.second.find(x=>x.id===id);if(!x.recording)return alert("Conclusão bloqueada: a gravação é obrigatória.");const t=document.getElementById("opinionText").value.trim();if(!t)return alert("Informe o parecer.");x.opinion=t;x.status="concluído";db.clinical.push({id:uid(),patientId:"",patientName:"Teleinterconsulta / 2ª opinião",complaint:x.question,hda:"",ida:"",plan:t,date:new Date().toISOString()});save();secondRoom.innerHTML='<span class="ok">Parecer concluído e registrado no prontuário demonstrativo ✓</span>';renderAll()}
+function addFinance(){if(!fDesc.value.trim()||!fValue.value)return alert("Preencha descrição e valor.");db.finance.push({id:uid(),desc:fDesc.value,value:Number(fValue.value),type:fType.value,date:new Date().toISOString()});save();fDesc.value=fValue.value="";renderAll()}
+function renderFinance(){const total=db.finance.reduce((a,x)=>a+(x.type==="receita"?Number(x.value):-Number(x.value)),0);financeTable.innerHTML=`<p><b>Saldo demo: R$ ${total.toLocaleString("pt-BR",{minimumFractionDigits:2})}</b></p><table><tr><th>Descrição</th><th>Tipo</th><th>Valor</th><th>Data</th></tr>${db.finance.slice().reverse().map(x=>`<tr><td>${esc(x.desc)}</td><td>${esc(x.type)}</td><td>R$ ${Number(x.value).toLocaleString("pt-BR",{minimumFractionDigits:2})}</td><td>${new Date(x.date).toLocaleString("pt-BR")}</td></tr>`).join("")}</table>`}
+function renderModules(){modules.innerHTML=`<table>${Object.entries(db.modules).map(([k,v])=>`<tr><td>${esc(k)}</td><td><span class="pill">${v?"Ativo":"Restrito"}</span></td></tr>`).join("")}</table>`}
+function resetDemo(){if(confirm("Restaurar todos os dados fictícios?")){db=seed();save();renderAll()}}
+</script>
+</body>
+</html>
